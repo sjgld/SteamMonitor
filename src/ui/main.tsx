@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type FormEvent } from 'react';
 import { createRoot } from 'react-dom/client';
-import type { Friend, GameSession, Snapshot } from '../shared';
+import type { Friend, GameSession, ReleaseCheck, Snapshot } from '../shared';
 import { AddDialog, Avatar, Badge, EditDialog, Empty, FriendDetail, GamePicture, Icon } from './components';
 import { ActivityPage } from './activity';
 import { DiscoveryInbox, DiscoverySettings } from './discovery';
@@ -272,10 +272,51 @@ function FriendsPage({ snapshot, version, activePage, onAdd, onEdit, onTimeline,
   </section>;
 }
 
+function SoftwareUpdate({ snapshot }: { snapshot: Snapshot }) {
+  const [result, setResult] = useState<ReleaseCheck | null>(null);
+  const [busy, setBusy] = useState<'check' | 'apply' | 'open' | 'local' | null>(null);
+  const [error, setError] = useState('');
+
+  async function run(action: () => Promise<unknown>, task: NonNullable<typeof busy>) {
+    setBusy(task);
+    setError('');
+    try {
+      await action();
+    } catch (error) {
+      setError(errorText(error));
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  return <section id="settings-update" tabIndex={-1} className="panel setting">
+    <h2>软件更新</h2>
+    <p>界面 {snapshot.uiVersion} · 采集程序 {snapshot.collectorVersion}</p>
+    <div className="input-action">
+      <button className="primary" disabled={busy !== null} onClick={() => void run(async () => {
+        setResult(null);
+        setResult(await api.checkRelease());
+      }, 'check')}>{busy === 'check' ? '正在检查…' : '检查更新'}</button>
+      <button disabled={busy !== null} onClick={() => void run(api.installUiUpdate, 'local')}>加载本地界面…</button>
+    </div>
+    {error && <p className="setting-feedback error" role="alert">{error}</p>}
+    {result?.kind === 'unpublished' && <p className="setting-feedback" role="status">GitHub 暂无正式发布。</p>}
+    {result?.kind === 'current' && <p className="setting-feedback" role="status">已是最新版本 {result.version}。</p>}
+    {result?.kind === 'interface' && <div className="setting-field">
+      <p className="setting-feedback" role="status">界面 {result.version} 可直接更新，后台采集继续运行。</p>
+      <button disabled={busy !== null} onClick={() => void run(api.applyReleaseUi, 'apply')}>立即更新界面</button>
+    </div>}
+    {result?.kind === 'full' && <div className="setting-field">
+      <p className="setting-feedback" role="status">完整版本 {result.version} 已发布。下载后退出旧版，再打开新版。</p>
+      <button disabled={busy !== null} onClick={() => void run(api.openRelease, 'open')}>打开下载页</button>
+    </div>}
+  </section>;
+}
+
 function Settings({ snapshot, onError, onSaved }: { snapshot: Snapshot; onError: (text: string) => void; onSaved: (text: string) => void }) {
   const [key, setKey] = useState('');
   const [busy, setBusy] = useState(false);
-  type Section = 'source' | 'collection' | 'update';
+  type Section = 'source' | 'collection';
   const [feedback, setFeedback] = useState<{ section: Section; text: string; error: boolean } | null>(null);
   const groups = [['source', '数据源'], ['collection', '后台采集'], ['update', '软件更新'], ['notice', '通知'], ['data', '数据管理']] as const;
   async function run(action: () => Promise<unknown>, section: Section, message?: string) {
@@ -333,12 +374,7 @@ function Settings({ snapshot, onError, onSaved }: { snapshot: Snapshot; onError:
         </button>
         {status('collection')}
       </section>
-      <section id="settings-update" tabIndex={-1} className="panel setting"><h2>软件更新</h2>
-        <p>界面 {snapshot.uiVersion} · 采集程序 {snapshot.collectorVersion}</p>
-        <p>选择已解压的 SteamMonitor 新版文件夹。兼容的界面会直接加载，后台采集继续运行。</p>
-        <button disabled={busy} onClick={() => void run(api.installUiUpdate, 'update')}>加载新版界面…</button>
-        {status('update')}
-      </section>
+      <SoftwareUpdate snapshot={snapshot} />
       <DiscoverySettings key={snapshot.discovery.owner} snapshot={snapshot} onError={onError} onSaved={onSaved} />
       <PreferencesPanels friends={snapshot.mode === 'live' ? snapshot.friends : []} onError={onError} onSaved={onSaved} />
     </div>

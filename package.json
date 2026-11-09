@@ -1,6 +1,6 @@
 {
   "name": "steam-monitor-local",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "private": true,
   "productName": "SteamMonitor",
   "main": "build/main/index.js",

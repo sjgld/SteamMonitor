@@ -202,10 +202,17 @@ export interface PlaytimeWatch {
   error: string;
 }
 
+export type ReleaseCheck =
+  | { kind: 'unpublished' }
+  | { kind: 'current' | 'interface' | 'full'; version: string };
+
 export interface MonitorApi {
   snapshot(): Promise<Snapshot>;
   uiReady(): Promise<void>;
   installUiUpdate(): Promise<boolean>;
+  checkRelease(): Promise<ReleaseCheck>;
+  applyReleaseUi(): Promise<void>;
+  openRelease(): Promise<void>;
   onChange(callback: () => void): () => void;
   setMode(mode: Snapshot['mode']): Promise<void>;
   setKey(key: string): Promise<void>;

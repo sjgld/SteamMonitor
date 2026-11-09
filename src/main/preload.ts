@@ -5,6 +5,9 @@ const api: MonitorApi = {
   snapshot: () => ipcRenderer.invoke('monitor:snapshot'),
   uiReady: () => ipcRenderer.invoke('monitor:uiReady'),
   installUiUpdate: () => ipcRenderer.invoke('monitor:installUiUpdate'),
+  checkRelease: () => ipcRenderer.invoke('monitor:checkRelease'),
+  applyReleaseUi: () => ipcRenderer.invoke('monitor:applyReleaseUi'),
+  openRelease: () => ipcRenderer.invoke('monitor:openRelease'),
   onChange(callback) {
     const listener = () => callback();
     ipcRenderer.on('monitor:change', listener);

@@ -14,7 +14,8 @@ import { PlaytimeSampler, reviewPlaytime } from './playtime';
 import { defaultNotices, Notices } from './notices';
 import { isSteamId, SteamApi } from './steam';
 import { Store, toCsv } from './store';
-import { backendFingerprint, savedUiUpdate, stageUiUpdate, type UiTarget } from './ui-update';
+import { backendFingerprint, savedUiUpdate, stageUiUpdate, stageVerifiedUi, type UiTarget } from './ui-update';
+import { checkGitHubRelease, githubCredential, releasePage } from './github-update';
 
 let window: BrowserWindow | null = null;
 let gameAssets: GameAssets;
@@ -42,6 +43,7 @@ let activeUi = packagedUi;
 let trialUi: { target: UiTarget; timer: NodeJS.Timeout } | null = null;
 let choosingUi = false;
 let uiUpdateResult: Snapshot['uiUpdateResult'] = null;
+let checkedRelease: Awaited<ReturnType<typeof checkGitHubRelease>> | null = null;
 const appId = 'SteamMonitor.Local';
 const startupName = 'SteamMonitor';
 const startupArgs = ['--start-hidden'];
@@ -240,6 +242,33 @@ async function installUiUpdate() {
   }
 }
 
+async function checkRelease() {
+  if (choosingUi || trialUi) throw new Error('软件更新正在进行，请稍后再试。');
+  choosingUi = true;
+  checkedRelease = null;
+  try {
+    checkedRelease = await checkGitHubRelease(await githubCredential(app.getPath('userData')), activeUi.version, uiBackend());
+    return checkedRelease.result;
+  } finally {
+    choosingUi = false;
+  }
+}
+
+async function applyReleaseUi() {
+  if (choosingUi || trialUi) throw new Error('软件更新正在进行，请稍后再试。');
+  if (!checkedRelease?.bundle) throw new Error('请先检查可用的界面更新。');
+  choosingUi = true;
+  try {
+    const target = await stageVerifiedUi(checkedRelease.bundle, uiUpdateRoot(), activeUi.version, uiBackend());
+    checkedRelease = null;
+    if (quitting) return;
+    uiUpdateResult = null;
+    tryUiUpdate(target);
+  } finally {
+    choosingUi = false;
+  }
+}
+
 function getSnapshot(): Snapshot {
   const state = mode === 'demo'
     ? { status: 'demo' as const, detail: '使用本机示例数据。', lastCheckedAt: demoUpdated, nextCheckAt: null }
@@ -311,6 +340,13 @@ function registerHandlers() {
   handle('snapshot', getSnapshot);
   handle('uiReady', markUiReady);
   handle('installUiUpdate', installUiUpdate);
+  handle('checkRelease', checkRelease);
+  handle('applyReleaseUi', applyReleaseUi);
+  handle('openRelease', () => {
+    const release = checkedRelease?.result;
+    if (release?.kind !== 'full') throw new Error('请先检查可用的完整版本。');
+    return shell.openExternal(releasePage(release.version));
+  });
   handle('setGapThreshold', (minutes: number) => {
     if (!validGapThreshold(minutes)) throw new Error('请输入 0 至 60 的整数分钟。');
     const previous = gapThreshold();
