@@ -8,6 +8,7 @@
     "build": "tsc -p tsconfig.main.json && tsc -p tsconfig.ui.json && vite build",
     "start": "npm run build && electron .",
     "test": "tsc -p tsconfig.main.json && node --test tests/*.test.cjs",
+    "test:ui": "npm run build && node --test tests/ui/smoke.test.cjs",
     "package:win": "npm run build && electron --version && node scripts/package-win.cjs"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "electron": "^45.2.3",
+    "playwright-core": "^1.65.0",
     "typescript": "~5.9.3",
     "vite": "^7.3.7"
   }

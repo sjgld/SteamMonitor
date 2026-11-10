@@ -17,7 +17,7 @@ const app = path.join(stage, 'resources', 'app');
 fs.mkdirSync(app, { recursive: true });
 fs.copyFileSync(path.join(root, 'package.json'), path.join(app, 'package.json'));
 for (const folder of ['build', 'assets']) fs.cpSync(path.join(root, folder), path.join(app, folder), { recursive: true });
-const { createUiManifest } = require('../build/main/ui-update.js');
+const { createUiManifest } = require('../build/main/update/ui-update.js');
 const manifest = createUiManifest(path.join(app, 'build'), metadata.version, require('electron/package.json').version);
 fs.writeFileSync(path.join(app, 'ui-update.json'), JSON.stringify(manifest, null, 2));
 fs.renameSync(path.join(stage, 'electron.exe'), path.join(stage, 'SteamMonitor.exe'));

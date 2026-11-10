@@ -4,8 +4,8 @@ const { DatabaseSync } = require('node:sqlite');
 const { mkdtempSync, rmdirSync, rmSync } = require('node:fs');
 const { tmpdir } = require('node:os');
 const { join } = require('node:path');
-const { Store } = require('../build/main/store');
-const { PlaytimeSampler, playtimeInterval, reviewPlaytime } = require('../build/main/playtime');
+const { Store } = require('../build/main/data/store');
+const { PlaytimeSampler, playtimeInterval, reviewPlaytime } = require('../build/main/collect/playtime');
 
 const id = '76561197960265729';
 const other = '76561197960265730';
@@ -124,7 +124,8 @@ test('restoring current and older backups restores records and leaves automatic 
     assert.equal(store.watch(id), undefined);
 
     const legacy = new DatabaseSync(file);
-    legacy.exec('DROP TABLE playtime_events; DROP TABLE playtime_watch;');
+    // Releases before 0.8 did not stamp a version; the oldest had no playtime history or consent log.
+    legacy.exec('DROP TABLE playtime_events; DROP TABLE playtime_watch; DROP TABLE consents; PRAGMA user_version = 0;');
     legacy.close();
     store.watchPlaytime(id, true, minute);
     store.restore(file);

@@ -1,8 +1,8 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
-const { Discovery, compareFriendList } = require('../build/main/discovery');
-const { SteamRequestError } = require('../build/main/steam');
-const { Store } = require('../build/main/store');
+const { Discovery, compareFriendList } = require('../build/main/collect/discovery');
+const { SteamRequestError } = require('../build/main/steam/api');
+const { Store } = require('../build/main/data/store');
 
 const owner = '76561197960265728';
 const tracked = '76561197960265729';

@@ -97,7 +97,10 @@ npm.cmd start
 ```powershell
 npm.cmd test
 npm.cmd run build
+npm.cmd run test:ui
 npm.cmd run package:win
 ```
+
+源码分为 `src/main`（主进程：采集、存储、IPC）、`src/ui`（React 界面：app / pages / components / lib）和 `src/shared`（两端共用的类型与规则）。模块边界和新增 IPC 方法的步骤见 [架构说明](docs/架构说明.md)，功能与界面路线图见 [设计规划](docs/设计规划.md)。早期的 [项目计划书](docs/项目计划书.md) 和 [活动页设计提案](docs/活动页设计提案.md) 也在 `docs` 目录。
 
 打包需要先下载 Electron 运行时，生成的新目录位于 `release`。各版本使用同一份本地数据，切换版本前从托盘退出旧实例。Steam 好友权限下的登录采集仍待验证，需要独立的授权测试账号与 Steam 官方好友界面对照。
