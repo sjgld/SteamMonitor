@@ -5,9 +5,10 @@
     "moduleResolution": "Bundler",
     "jsx": "react-jsx",
     "strict": true,
+    "noUnusedLocals": true,
     "skipLibCheck": true,
     "noEmit": true,
     "types": ["vite/client"]
   },
-  "include": ["src/ui", "src/shared.ts"]
+  "include": ["src/ui", "src/shared"]
 }

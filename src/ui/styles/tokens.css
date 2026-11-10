@@ -1,0 +1,82 @@
+/*
+ * Design tokens. The interface itself is monochrome: surfaces step in lightness and text in three
+ * greys. Colour is reserved for data — a friend's status and the bands of a timeline — and for
+ * success and error feedback. Every other stylesheet takes its values from here.
+ */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces, darkest first. Layers are told apart by lightness, not by outlines. */
+  --bg-0: #0d0f11;   /* window */
+  --bg-1: #14171a;   /* sidebar, panels, dialogs */
+  --bg-2: #1c2024;   /* controls, selected rows, inset blocks */
+  --bg-3: #262b30;   /* hovered and pressed controls */
+  --line: #ffffff12;         /* hairline between rows */
+  --line-strong: #ffffff24;  /* field outline, emphasised divider */
+  --scrim: #000000b3;
+  --shadow: 0 12px 32px #00000080;
+
+  /* Text */
+  --text-1: #f3f5f6;
+  --text-2: #a4acb3;
+  --text-3: #7d858d;
+  --ink: #0d0f11;    /* on a light or bright fill */
+
+  /* Status: the only chroma in the interface. */
+  --st-playing: #3ddc97;
+  --st-online: #5aa9ff;
+  --st-away: #f0b64a;
+  --st-busy: #f2777a;
+  --st-offline: #7d858d;
+
+  /* Timeline bands. Playing is the brightest mark on screen; absence of data stays neutral. */
+  --band-playing: #3ddc97;
+  --band-online: #2f5f96;
+  --band-away: #8a6a2a;
+  --band-busy: #8f4a55;
+  --band-offline: #3a4148;
+  --band-unknown: #565c66;
+  --band-empty: #171a1d;
+  --band-growth: #e9edf0;
+  --hatch-a: #1c2024;
+  --hatch-b: #7d858d;
+  --band-gap: repeating-linear-gradient(125deg, var(--hatch-a) 0 3px, var(--hatch-b) 3px 5px);
+
+  /* Feedback */
+  --ok: #3ddc97;
+  --warn: #f0b64a;
+  --danger: #ff8f8a;
+  --danger-bg: #2b1719;
+  --danger-fill: #5a2a2e;
+
+  /* Type: five sizes, two weights. Times and axis labels use the numeric face. */
+  --font-ui: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+  --font-num: "Cascadia Mono", "Cascadia Code", Consolas, "DejaVu Sans Mono", monospace;
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-lg: 18px;
+  --fs-xl: 28px;
+  --fw-regular: 400;
+  --fw-strong: 600;
+
+  /* Shape and space (4 px grid) */
+  --r-1: 4px;     /* marks, small chips */
+  --r-2: 6px;     /* controls */
+  --r-3: 10px;    /* panels, dialogs */
+  --r-round: 999px;
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --control: 34px;
+  --control-sm: 28px;
+
+  font-family: var(--font-ui);
+  font-size: var(--fs-md);
+  line-height: 1.45;
+  background: var(--bg-0);
+  color: var(--text-1);
+}

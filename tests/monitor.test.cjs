@@ -1,8 +1,9 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
-const { Store, toCsv } = require('../build/main/store');
-const { normalizeSummary, parseProfile, SteamApi } = require('../build/main/steam');
-const { Poller } = require('../build/main/poller');
+const { Store } = require('../build/main/data/store');
+const { toCsv } = require('../build/main/data/csv');
+const { normalizeSummary, parseProfile, SteamApi } = require('../build/main/steam/api');
+const { Poller } = require('../build/main/collect/poller');
 
 const id = '76561197960265729';
 const player = { id, name: '测试' };

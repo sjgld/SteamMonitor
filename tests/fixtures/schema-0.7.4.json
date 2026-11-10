@@ -1,0 +1,57 @@
+[
+  {
+    "type": "index",
+    "name": "activity_friend",
+    "sql": "CREATE INDEX activity_friend ON activity(player_id, at DESC, id DESC)"
+  },
+  {
+    "type": "index",
+    "name": "activity_time",
+    "sql": "CREATE INDEX activity_time ON activity(at DESC, id DESC)"
+  },
+  {
+    "type": "index",
+    "name": "playtime_events_friend",
+    "sql": "CREATE INDEX playtime_events_friend ON playtime_events(player_id, at DESC, id DESC)"
+  },
+  {
+    "type": "table",
+    "name": "activity",
+    "sql": "CREATE TABLE activity (\n        id INTEGER PRIMARY KEY, player_id TEXT NOT NULL REFERENCES friends(id) ON DELETE CASCADE,\n        kind TEXT NOT NULL, at INTEGER NOT NULL, ended_at INTEGER, reason TEXT,\n        presence TEXT, previous_presence TEXT,\n        game_id TEXT, game_name TEXT, previous_game_id TEXT, previous_game_name TEXT\n      ) STRICT"
+  },
+  {
+    "type": "table",
+    "name": "favorite_games",
+    "sql": "CREATE TABLE favorite_games (game TEXT PRIMARY KEY) STRICT"
+  },
+  {
+    "type": "table",
+    "name": "friends",
+    "sql": "CREATE TABLE friends (\n        id TEXT PRIMARY KEY, name TEXT NOT NULL, note TEXT NOT NULL DEFAULT '',\n        pinned INTEGER NOT NULL DEFAULT 0, paused INTEGER NOT NULL DEFAULT 0,\n        presence TEXT NOT NULL DEFAULT 'unknown', game_id TEXT, game_name TEXT,\n        observed_at INTEGER, gap_since INTEGER\n      , avatar TEXT) STRICT"
+  },
+  {
+    "type": "table",
+    "name": "playtime",
+    "sql": "CREATE TABLE playtime (\n        player_id TEXT PRIMARY KEY REFERENCES friends(id) ON DELETE CASCADE,\n        at INTEGER NOT NULL, review TEXT NOT NULL, games TEXT NOT NULL\n      ) STRICT"
+  },
+  {
+    "type": "table",
+    "name": "playtime_events",
+    "sql": "CREATE TABLE playtime_events (\n        id INTEGER PRIMARY KEY, player_id TEXT NOT NULL REFERENCES friends(id) ON DELETE CASCADE,\n        app_id TEXT NOT NULL, name TEXT NOT NULL, minutes INTEGER NOT NULL CHECK(minutes > 0),\n        since INTEGER NOT NULL, at INTEGER NOT NULL CHECK(at >= since),\n        match TEXT NOT NULL CHECK(match IN ('observed','recent','unmatched')),\n        gap INTEGER NOT NULL CHECK(gap IN (0,1))\n      ) STRICT"
+  },
+  {
+    "type": "table",
+    "name": "playtime_watch",
+    "sql": "CREATE TABLE playtime_watch (\n        player_id TEXT PRIMARY KEY REFERENCES friends(id) ON DELETE CASCADE,\n        enabled_at INTEGER NOT NULL, next_at INTEGER NOT NULL, error TEXT NOT NULL DEFAULT ''\n      ) STRICT"
+  },
+  {
+    "type": "table",
+    "name": "preferences",
+    "sql": "CREATE TABLE preferences (key TEXT PRIMARY KEY, value TEXT NOT NULL) STRICT"
+  },
+  {
+    "type": "table",
+    "name": "removed_gaps",
+    "sql": "CREATE TABLE removed_gaps (\n        activity_id INTEGER PRIMARY KEY REFERENCES activity(id) ON DELETE CASCADE\n      ) STRICT"
+  }
+]

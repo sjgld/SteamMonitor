@@ -3,11 +3,11 @@ const { test } = require('node:test');
 const { mkdtempSync, rmdirSync, rmSync } = require('node:fs');
 const { tmpdir } = require('node:os');
 const { join } = require('node:path');
-const { activityTracks, buildReport, calendarDayRange, comparePlaytime, unchangedRecoveries } = require('../build/main/analytics');
-const { displayBands, gapDisplay, hideGapEvent } = require('../build/gap-display');
-const { defaultNotices, inQuietHours, Notices } = require('../build/main/notices');
-const { Store } = require('../build/main/store');
-const { safeAvatar, SteamApi } = require('../build/main/steam');
+const { activityTracks, buildReport, calendarDayRange, comparePlaytime, unchangedRecoveries } = require('../build/main/data/analytics');
+const { displayBands, gapDisplay, hideGapEvent } = require('../build/shared/gap-display');
+const { defaultNotices, inQuietHours, Notices } = require('../build/main/notify/rules');
+const { Store } = require('../build/main/data/store');
+const { safeAvatar, SteamApi } = require('../build/main/steam/api');
 
 const id = '76561197960265729';
 const other = '76561197960265730';

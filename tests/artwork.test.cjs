@@ -4,7 +4,7 @@ const { mkdtempSync, rmSync } = require('node:fs');
 const { tmpdir } = require('node:os');
 const { join } = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
-const { GameAssets } = require('../build/main/artwork');
+const { GameAssets } = require('../build/main/steam/artwork');
 
 const id = '3548580';
 const path = '/store_item_assets/steam/apps/' + id + '/' + 'a'.repeat(40) + '/header_schinese.jpg?t=1794038264';

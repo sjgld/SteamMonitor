@@ -2,7 +2,7 @@ const { execFileSync } = require('node:child_process');
 const { mkdirSync, writeFileSync } = require('node:fs');
 const path = require('node:path');
 const { version } = require('../package.json');
-const { createReleaseBundle, releaseBundleName } = require('../build/main/ui-update.js');
+const { createReleaseBundle, releaseBundleName } = require('../build/main/update/ui-update.js');
 
 const release = path.join(__dirname, '..', 'release');
 const folder = `SteamMonitor-${version}-win32-${process.arch}`;

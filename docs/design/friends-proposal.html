@@ -1,0 +1,88 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><title>mock</title>
+<style>
+:root{--bg0:#0d0f11;--bg1:#14171a;--bg2:#1c2024;--bg3:#262b30;--line:#ffffff12;--line2:#ffffff24;
+--t1:#f3f5f6;--t2:#a4acb3;--t3:#6c747c;
+--play:#3ddc97;--online:#5aa9ff;--away:#f0b64a;--busy:#f2777a;--off:#6c747c;
+--play-b:#1f7a57;--online-b:#2f5f96;--away-b:#8a6a2a;
+font:14px/1.45 "Segoe UI Variable Text","Segoe UI","Inter","Microsoft YaHei UI","Noto Sans CJK SC",sans-serif;color:var(--t1)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg0);width:1260px;height:810px;display:grid;grid-template-columns:208px 1fr;overflow:hidden}
+.num{font-variant-numeric:tabular-nums;font-family:"Cascadia Mono","JetBrains Mono","DejaVu Sans Mono",monospace;font-size:12px;letter-spacing:-.01em}
+aside{background:var(--bg1);display:flex;flex-direction:column;padding:20px 12px 14px}
+.brand{display:flex;align-items:center;gap:10px;padding:0 8px 22px;font-weight:600;letter-spacing:.01em}
+.mark{width:22px;height:22px;border-radius:4px;background:var(--t1);display:grid;place-items:center}
+nav a{display:flex;align-items:center;gap:10px;height:36px;padding:0 10px;border-radius:6px;color:var(--t2);font-size:14px}
+nav a.on{background:var(--bg2);color:var(--t1);font-weight:600}
+nav svg,.ic{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.sys{margin-top:auto;padding:12px 10px 0;border-top:1px solid var(--line);display:grid;gap:4px;font-size:12px;color:var(--t2)}
+.sys b{color:var(--t1);font-weight:600;font-size:13px;display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none}
+main{padding:28px 32px;display:grid;grid-template-rows:auto auto 1fr;gap:20px;min-width:0}
+header{display:flex;align-items:flex-end;justify-content:space-between}
+h1{font-size:28px;line-height:1.1;margin:0;font-weight:600;letter-spacing:-.01em}
+h1 small{font-size:13px;color:var(--t3);font-weight:400;margin-left:12px;letter-spacing:0}
+.btn{height:34px;padding:0 14px;border-radius:6px;border:0;font:inherit;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:8px}
+.btn.p{background:var(--t1);color:var(--bg0)}.btn.g{background:transparent;color:var(--t2);font-weight:400}
+.bar{display:flex;align-items:center;gap:20px;border-bottom:1px solid var(--line);height:38px}
+.tab{color:var(--t2);font-size:13px;height:38px;display:flex;align-items:center;gap:6px;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab.on{color:var(--t1);border-color:var(--t1);font-weight:600}.tab i{font-style:normal;color:var(--t3)}
+.search{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--t3);font-size:13px}
+kbd{font:inherit;font-size:11px;border:1px solid var(--line2);border-radius:4px;padding:0 5px;color:var(--t3)}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:32px;min-height:0}
+.row{display:grid;grid-template-columns:36px minmax(0,1.1fr) minmax(0,1.3fr) auto;gap:14px;align-items:center;height:56px;padding:0 12px;border-radius:8px}
+.row+.row{box-shadow:0 -1px 0 var(--line)}.row.on{background:var(--bg2);box-shadow:none}.row.on+.row{box-shadow:none}
+.av{width:36px;height:36px;border-radius:50%;background:var(--bg3);color:var(--t2);display:grid;place-items:center;font-size:12px;font-weight:600}
+.nm{font-weight:600}.nm span{display:block;font-weight:400;color:var(--t3);font-size:12px}
+.st{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)}
+.st b{font-weight:600}.st .game{color:var(--t1)}
+.hollow{background:transparent;border:1.5px solid var(--t3)}
+.sec{font-size:12px;color:var(--t3);letter-spacing:.06em;margin:22px 0 10px;display:flex;justify-content:space-between}
+.detail{background:var(--bg1);border-radius:10px;padding:22px 22px 18px;align-self:start}
+.who{display:flex;align-items:center;gap:14px}.who .av{width:52px;height:52px;font-size:15px}
+.who h2{margin:0;font-size:20px;font-weight:600}.who p{margin:2px 0 0;color:var(--t3);font-size:13px}
+.now{margin-top:18px;display:grid;grid-template-columns:auto 1fr;gap:4px 12px;align-items:baseline}
+.now .big{font-size:20px;font-weight:600;color:var(--play)}.now .sub{color:var(--t2);font-size:13px;grid-column:1/-1}
+.band{height:18px;display:flex;gap:2px;border-radius:3px;overflow:hidden}
+.band i{display:block;height:100%}.axis{display:flex;justify-content:space-between;color:var(--t3);margin-top:6px}
+.gap{background:repeating-linear-gradient(135deg,#ffffff26 0 2px,transparent 2px 6px)}
+.ev{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:7px 0;font-size:13px;color:var(--t2)}.ev b{color:var(--t1);font-weight:600}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--t2);margin-top:10px}.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:10px;height:10px;border-radius:2px}
+</style>
+<aside>
+ <div class="brand"><span class="mark"><svg class="ic" style="stroke:#0d0f11;width:14px;height:14px;stroke-width:2.2" viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg></span>SteamMonitor</div>
+ <nav>
+  <a class="on"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0m9 14v-2a4 4 0 0 0-3-3.9M17 3a4 4 0 0 1 0 8"/></svg>好友</a>
+  <a><svg viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></svg>活动</a>
+  <a><svg viewBox="0 0 24 24"><path d="M4 20h16M6 16v-4m6 4V4m6 12V8"/></svg>回顾</a>
+  <a><svg viewBox="0 0 24 24"><path d="M4 7h16M4 17h16M8 4v6m8 4v6"/></svg>设置</a>
+ </nav>
+ <div class="sys"><b><span class="dot" style="color:var(--online)"></span>示例数据</b><span>上次检查 <span class="num">04:43</span> · 仅存本机</span><span style="color:var(--t1)">连接 Steam 数据 →</span></div>
+</aside>
+<main>
+ <header><h1>好友<small>6 人 · 2 人正在游戏</small></h1><button class="btn p">添加好友</button></header>
+ <div class="bar"><span class="tab on">全部 <i>6</i></span><span class="tab">游戏中 <i>2</i></span><span class="tab">在线 <i>4</i></span><span class="tab">离线 <i>1</i></span><span class="tab">未知 <i>1</i></span>
+  <span class="search"><svg class="ic" viewBox="0 0 24 24"><path d="m21 21-4.3-4.3m2.3-5.7a8 8 0 1 1-16 0 8 8 0 0 1 16 0"/></svg>搜索好友、备注或游戏 <kbd>Ctrl K</kbd></span></div>
+ <div class="cols">
+  <section>
+   <div class="row on"><span class="av">林</span><div class="nm">小林<span>周末开黑</span></div><div class="st" style="color:var(--play)"><span class="dot"></span><b class="game">Dota 2</b><span class="num" style="color:var(--t2)">1 小时 12 分</span></div><span class="num" style="color:var(--t3)">04:43</span></div>
+   <div class="row"><span class="av">Mo</span><div class="nm">Momo<span>FPS 小队</span></div><div class="st" style="color:var(--play)"><span class="dot"></span><b class="game">Counter-Strike 2</b><span class="num" style="color:var(--t2)">4 小时</span></div><span class="num" style="color:var(--t3)">04:43</span></div>
+   <div class="row"><span class="av">泽</span><div class="nm">阿泽</div><div class="st" style="color:var(--online)"><span class="dot"></span><span style="color:var(--t1)">在线</span></div><span class="num" style="color:var(--t3)">04:43</span></div>
+   <div class="row"><span class="av">周</span><div class="nm">小周</div><div class="st" style="color:var(--away)"><span class="dot"></span><span style="color:var(--t1)">离开</span><span class="num">3 小时 36 分</span></div><span class="num" style="color:var(--t3)">04:43</span></div>
+   <div class="row"><span class="av">陈</span><div class="nm">小陈</div><div class="st" style="color:var(--off)"><span class="dot"></span><span>显示离线</span></div><span class="num" style="color:var(--t3)">04:43</span></div>
+   <div class="row"><span class="av">雨</span><div class="nm">小雨</div><div class="st"><span class="dot hollow"></span><span>状态未知</span></div><span class="num" style="color:var(--t3)">—</span></div>
+  </section>
+  <aside class="detail" style="display:block">
+   <div class="who"><span class="av">林</span><div style="flex:1"><h2>小林</h2><p>周末开黑</p></div><button class="btn g">编辑</button></div>
+   <div class="now"><span class="big">Dota 2</span><span class="num" style="color:var(--t2)">已玩 1 小时 12 分</span><span class="sub">上次成功观测 <span class="num">04:43</span></span></div>
+   <div class="sec"><span>最近 6 小时</span><span style="color:var(--t1);letter-spacing:0">打开时间轴 →</span></div>
+   <div class="band"><i style="flex:30;background:var(--bg3)"></i><i style="flex:15;background:var(--online-b)"></i><i style="flex:16;background:var(--play)"></i><i style="flex:12;background:var(--away-b)"></i><i style="flex:5;background:var(--online-b)"></i><i class="gap" style="flex:3"></i><i style="flex:6;background:var(--online-b)"></i><i style="flex:13;background:var(--play)"></i></div>
+   <div class="axis num"><span>22:43</span><span>00:43</span><span>02:43</span><span>04:43</span></div>
+   <div class="legend"><span><i class="sw" style="background:var(--play)"></i>游戏</span><span><i class="sw" style="background:var(--online-b)"></i>在线</span><span><i class="sw" style="background:var(--away-b)"></i>离开</span><span><i class="sw gap"></i>缺口</span></div>
+   <div class="sec"><span>最近活动</span></div>
+   <div class="ev"><span class="num">04:30</span><span>开始玩 <b>Dota 2</b></span></div>
+   <div class="ev"><span class="num">04:08</span><span>采集恢复 · 在线</span></div>
+   <div class="ev"><span class="num">03:57</span><span>采集缺口 <span class="num">11 分</span></span></div>
+   <div class="ev"><span class="num">03:38</span><span>离开 → 在线</span></div>
+  </aside>
+ </div>
+</main>
